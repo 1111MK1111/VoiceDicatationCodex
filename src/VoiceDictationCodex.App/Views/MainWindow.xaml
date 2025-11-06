@@ -1,0 +1,174 @@
+<Window x:Class="VoiceDictationCodex.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VoiceDictationCodex.ViewModels"
+        Title="Voice Dictation Codex"
+        Width="1280"
+        Height="840"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0"
+                Background="{StaticResource SecondaryBrush}"
+                Padding="32"
+                CornerRadius="0,24,24,0"
+                SnapsToDevicePixels="True">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Voice Dictation Codex"
+                               FontSize="28"
+                               FontWeight="Bold" />
+                    <TextBlock Text="Offline transcription studio"
+                               Margin="0,4,0,0"
+                               Foreground="{StaticResource TextSecondaryBrush}" />
+
+                    <Border Style="{StaticResource ChipStyle}" Margin="0,24,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="10" Height="10" Fill="{StaticResource AccentBrush}" />
+                            <TextBlock Text="Offline"
+                                       Margin="8,0,0,0"
+                                       Foreground="{StaticResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0">
+                    <TextBlock Text="Model Library"
+                               FontWeight="SemiBold"
+                               FontSize="16" />
+                    <ListView ItemsSource="{Binding AvailableModels}"
+                              SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                              Margin="0,12,0,0"
+                              Height="240">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="16"
+                                        Background="#11FFFFFF"
+                                        CornerRadius="12"
+                                        Margin="0,6">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Description}"
+                                                   FontSize="12"
+                                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding DownloadSize, StringFormat='{}{0} MB'}" FontSize="12" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button Content="Download Selected"
+                            Command="{Binding DownloadSelectedModelCommand}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1"
+                Background="{StaticResource SurfaceBrush}"
+                CornerRadius="24,0,0,24"
+                Padding="40">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Current session" FontSize="20" FontWeight="Bold" />
+                        <TextBlock Text="Capture or import audio to transcribe" Foreground="{StaticResource TextSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="New Session" Command="{Binding CreateSessionCommand}" Margin="0,0,16,0" />
+                        <Button Content="Import Audio" Command="{Binding ImportAudioCommand}" />
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1"
+                        Margin="0,24,0,24"
+                        Background="#22FFFFFF"
+                        CornerRadius="24"
+                        Padding="32">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Live transcription"
+                                       FontSize="16"
+                                       FontWeight="SemiBold" />
+                            <ScrollViewer Margin="0,16,0,0">
+                                <TextBlock Text="{Binding ActiveTranscription.Text}" TextWrapping="Wrap" />
+                            </ScrollViewer>
+                        </StackPanel>
+
+                        <Border Grid.Column="1"
+                                Background="#11FFFFFF"
+                                CornerRadius="16"
+                                Padding="24"
+                                Margin="24,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Session Stats"
+                                           FontWeight="SemiBold"
+                                           FontSize="16" />
+                                <UniformGrid Columns="2" Margin="0,16,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Duration" Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding ActiveTranscription.Duration}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Words" Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding ActiveTranscription.WordCount}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Language" Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding ActiveTranscription.Language}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Model" Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding ActiveTranscription.ModelName}" />
+                                    </StackPanel>
+                                </UniformGrid>
+                                <Button Content="Export Text" Command="{Binding ExportTextCommand}" Margin="0,24,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <Button Content="{Binding RecordingButtonText}"
+                            Command="{Binding ToggleRecordingCommand}"
+                            Width="180" />
+                    <Border Style="{StaticResource ChipStyle}" Margin="16,0,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="10" Height="10" Fill="{Binding RecordingIndicatorBrush}" />
+                            <TextBlock Text="{Binding RecordingStatusText}"
+                                       Margin="8,0,0,0"
+                                       Foreground="{StaticResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
