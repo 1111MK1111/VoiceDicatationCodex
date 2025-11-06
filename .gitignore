@@ -1,0 +1,14 @@
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.db
+.vs/
+.nuget/
+logs/
+*.log
+publish/
+artifacts/
+*.cache
